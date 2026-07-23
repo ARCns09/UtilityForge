@@ -63,16 +63,19 @@ Version 0.1 promises rendered-pixel conversion, orientation application, and sta
 
 Included behavior is deliberately narrow and deterministic:
 
-- Accept a Matroska input containing exactly one video stream, zero or one audio stream, and no subtitle, attachment, or data streams.
-- Use FFprobe JSON to inspect the container, codec names, stream counts, and duration before proposing an operation.
-- Offer lossless remux when video is H.264/AVC or H.265/HEVC and audio is absent, AAC, or MP3. FFmpeg copies streams with no media re-encoding.
-- If that narrow stream layout is valid but a codec is not remux-compatible, offer—not automatically start—a standard re-encode to H.264 using available `libx264` and AAC for audio. The dialog clearly labels it lossy, slower, and potentially larger/smaller.
-- If the required encoders are unavailable, report the missing capability and do not offer a nonfunctional preset.
-- Reject other stream layouts in 0.1 with a precise message. UtilityForge does not silently discard subtitles, attachments, extra audio, data, or extra video streams.
-- Produce an `.mp4` staged output and verify successful process exit plus a minimal FFprobe inspection before publication.
+- Accept a Matroska input containing exactly one video stream and any number of audio streams, including no audio.
+- Reject inputs with zero video streams or more than one video stream. Version 0.1 never chooses among multiple video streams or silently discards an extra video stream.
+- Use FFprobe JSON to inspect the container, codec names, stream counts, stream indexes, language/disposition metadata, and duration before proposing an operation.
+- Treat H.264/AVC and H.265/HEVC as remux-compatible video and AAC and MP3 as compatible audio for the version 0.1 MP4 contract.
+- Include every compatible audio stream in source order. Preserve available language and disposition metadata where FFmpeg's MP4 muxer supports it.
+- Exclude subtitle, attachment, data, and incompatible audio streams. Before starting, show their types, indexes, and codecs in a preflight warning and require explicit confirmation; exclusion is never silent.
+- Offer lossless remux when the single video stream is remux-compatible. FFmpeg copies the video and every compatible audio stream without media re-encoding, even when other confirmed streams are excluded.
+- If the single video codec is not remux-compatible but FFmpeg can decode it, offer—not automatically start—a standard fallback that re-encodes video to H.264 with available `libx264` and re-encodes every included compatible audio stream to AAC. The dialog clearly labels the operation lossy, slower, and potentially larger or smaller.
+- If the video cannot be decoded or required fallback encoders are unavailable, report the missing capability and do not offer a nonfunctional preset.
+- Produce an `.mp4` staged output and verify successful process exit plus a minimal FFprobe inspection before publication. Validation confirms exactly one output video stream and the expected number of included audio streams.
 - Use FFmpeg machine progress relative to the probed duration when available; otherwise show a phase/indeterminate progress.
 
-The application neither offers nor runs re-encoding when the file qualifies for remux. Re-encoding appears only as the explicit fallback for a codec-incompatible file that otherwise meets the narrow stream-layout contract. Source MKV files are never changed.
+The application neither offers nor runs video re-encoding when the single video stream qualifies for remux. Re-encoding appears only as the explicit fallback for a video-codec incompatibility. Source MKV files are never changed.
 
 ## Compression
 
@@ -91,7 +94,7 @@ Password-protected/encrypted archives, extraction, split archives, custom compre
 
 ## QR generation
 
-Included behavior, contingent on approval of the isolated libqrencode dependency:
+Included behavior using the approved, isolated libqrencode dependency:
 
 - Open a native dialog accepting plain text or a URL as data; UtilityForge does not fetch or open it.
 - Accept UTF-8 input up to 2,048 bytes for a predictable UI/security bound, subject to the encoder's stricter capacity for the chosen data.
@@ -160,7 +163,7 @@ UtilityForge does not install any dependency or request administrator access.
 - Startup does not probe external processes, and idle operation has no recurring worker/polling activity.
 - Dropping supported and hostile-path inputs never blocks or injects a shell command.
 - Still-image conversions pass format, orientation, alpha-warning, corrupt-input, oversize, cancellation, and collision tests.
-- Compatible MKV input remuxes without re-encoding; codec-incompatible narrow-layout input requires explicit re-encode confirmation; unsupported streams are not silently dropped.
+- Compatible MKV input with multiple AAC/MP3 audio streams remuxes without re-encoding; a codec-incompatible single video requires explicit re-encode confirmation; excluded subtitle, attachment, data, and incompatible audio streams are listed and confirmed rather than silently dropped.
 - File and folder ZIP/TAR.GZ tasks obey basename, hidden-file, symlink, special-file, validation, cancellation, and cleanup rules.
 - QR Unicode/bounds, preview, save, and clipboard behavior passes with the approved dependency.
 - All slow work leaves the main window interactive and all tasks have observable phase/progress plus cancellation.
@@ -176,7 +179,7 @@ The following are not included:
 - all Folder Preview functionality, including global folder hovering;
 - all GitSnap functionality and network access;
 - animated image conversion, resize/crop/edit tools, broad metadata preservation, RAW/AVIF/GIF/TIFF targets, and color-management guarantees;
-- general-purpose media conversion, arbitrary FFmpeg arguments/presets, subtitle handling, multiple audio/video streams, attachments, hardware encoding, video trimming, and non-MKV inputs;
+- general-purpose media conversion, arbitrary FFmpeg arguments/presets, subtitle preservation/conversion, multiple video streams, incompatible-audio preservation, attachment/data preservation, hardware encoding, video trimming, and non-MKV inputs;
 - archive extraction, encryption/passwords, split archives, custom levels/exclusions, combined multi-root archives, and alternate tool backends;
 - QR decoding, styling, logos, vector output, bulk generation, and URL shortening;
 - task/input history, recent files, SQLite, telemetry, analytics, and an update checker;

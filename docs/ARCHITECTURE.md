@@ -194,7 +194,7 @@ Errors cross boundaries as `AppError`, not already-formatted dialog strings. Cat
 
 Expected user-correctable errors appear inline on the affected queue row and through a concise in-window notification. Details show the operation, safe arguments summary, tool/version, exit code, and a bounded stderr excerpt. Repeated errors are grouped by task rather than spawning dialog storms.
 
-Warnings that change output semantics—lossy image conversion, alpha removal, metadata loss, or re-encoding—require an explicit confirmation before task submission. Unsupported 0.1 media streams are rejected rather than dropped. Success uses the status surface rather than modal dialogs. Programmer invariants are logged and tested; the release UI reports an internal error without crashing where recovery is safe.
+Warnings that change output semantics—lossy image conversion, alpha removal, metadata loss, re-encoding, or excluding unsupported media streams—require an explicit confirmation before task submission. For 0.1 MKV operations, the planner includes every compatible audio stream and explicitly lists subtitles, attachments, data, and incompatible audio streams that will be excluded. Inputs without exactly one video stream are rejected. Success uses the status surface rather than modal dialogs. Programmer invariants are logged and tested; the release UI reports an internal error without crashing where recovery is safe.
 
 ## QProcess safety contract
 
@@ -254,7 +254,7 @@ Tests use Qt Test and CTest, divided by risk:
 - **Unit tests:** output naming/collisions, MIME/extension planning, media compatibility decisions, command argument arrays, error mapping, task state transitions, settings keys/migrations, log bounds, and QR render sizing.
 - **Model/controller tests:** queued updates, cancellation races, warning confirmation, row/result association, and no UI-thread blocking assumptions using signals and event-loop-aware spies.
 - **Process integration tests:** small fake executables emit controlled stdout/stderr, delay, fail, ignore terminate, and create or omit outputs. Tests verify arguments arrive literally and no shell expansion occurs.
-- **Format integration tests:** tiny generated/redistributable image and media fixtures exercise PNG/JPEG/WebP, compatible remux, fallback re-encode, corrupt input, and missing codecs. External-tool tests skip with an explicit reason when capabilities are absent.
+- **Format integration tests:** tiny generated/redistributable image and media fixtures exercise PNG/JPEG/WebP, compatible remux with multiple audio streams, confirmed stream exclusions, fallback re-encode, corrupt input, and missing codecs. External-tool tests skip with an explicit reason when capabilities are absent.
 - **Filesystem tests:** temporary directories cover Unicode/control characters, symlinks, permissions, collisions, cancellation cleanup, and atomic publication.
 - **Widget smoke tests:** keyboard actions, drag/drop acceptance, focus order, system palette response, and close-with-running-work.
 - **Performance tests:** instrument startup, idle wakeups, large queue insertion, and responsiveness during CPU/process tasks on Fedora KDE. Performance targets are tracked rather than made timing-fragile unit tests.

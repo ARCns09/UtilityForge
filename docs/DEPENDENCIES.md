@@ -16,22 +16,20 @@ Dependencies must be discovered through CMake targets or absolute executable pat
 
 | Dependency | Proposed minimum | Purpose | Rationale |
 | --- | --- | --- | --- |
-| C++ compiler with C++20 support | GCC 12+ or Clang 15+ | Compile the application | Fedora-first baseline with mature C++20 support. Exact CI versions can be newer. |
+| C++ compiler with C++20 support | GCC 12+ or Clang 15+ | Compile the application | Approved Fedora-first baseline with mature C++20 support. Exact CI versions can be newer. |
 | CMake | 3.24+ | Configure, build, test, and install | Modern target-based CMake without requiring the newest distribution release. |
 | Qt 6 Core | 6.5+ | Event loop, object model, paths, settings, processes, threading | Core application infrastructure. |
 | Qt 6 Gui | 6.5+ | Clipboard, drag/drop, images, desktop services | Required by Widgets and DropZone. |
 | Qt 6 Widgets | 6.5+ | Entire user interface | The mandated native UI technology. |
-| libqrencode | distribution-supported release | Encode QR module matrices behind `QrEncoder` | Smallest recommended reliable QR implementation; subject to explicit approval below. |
+| libqrencode | distribution-supported release | Encode QR module matrices behind `QrEncoder` | Approved small, reliable QR implementation. |
 
 Qt Network, Qt SQL, Qt Concurrent, KDE Frameworks, and multimedia frameworks are not required for 0.1. `QThreadPool` from Qt Core is sufficient for in-process background work. SQLite is not used because version 0.1 has no structured history. Qt's PNG/JPEG handlers and a matching WebP image-format plugin are capability-checked; absent WebP support disables only WebP input/output rather than preventing application launch.
 
-Qt 6.5 is the proposed compatibility floor because it is an LTS line and provides the required Widgets APIs. Fedora KDE is the primary packaging and test target; support for other distributions depends on meeting the same Qt and compiler floor.
+Qt 6.5 is the approved compatibility floor because it is an LTS line and provides the required Widgets APIs. Fedora KDE is the primary packaging and test target; support for other distributions depends on meeting the same Qt and compiler floor.
 
-## QR encoding dependency decision
+## QR encoding dependency
 
-Qt does not provide a QR encoder. The recommendation is to use **libqrencode** as one small, required linked dependency for version 0.1 and isolate it behind `QrEncoder`. This is preferable to invoking an extra process, implementing a non-trivial standard from scratch, or adopting a larger barcode suite.
-
-Before implementation, the maintainer must approve this dependency and its packaging/license review. If it is not approved, QR generation must be postponed explicitly rather than represented by placeholder or unreliable code.
+Qt does not provide a QR encoder. **libqrencode is approved** as one small, required linked dependency for version 0.1 and is isolated behind `QrEncoder`. This is preferable to invoking an extra process, implementing a non-trivial standard from scratch, or adopting a larger barcode suite. Its exact packaged version and license metadata must still be recorded during release preparation.
 
 ## Feature runtime tools and plugins
 
@@ -46,7 +44,7 @@ External executables are detected lazily with `QStandardPaths::findExecutable`, 
 
 “Required for feature” does not mean required to start UtilityForge. The UI must show which operations are unavailable and a distribution-neutral explanation naming the missing executable. It must not attempt package installation or invoke a privileged package manager.
 
-The recommended archive tool is `bsdtar` because one executable can produce both ZIP and compressed tar archives. If Fedora packaging or capability testing makes this impractical, replacing it with separate `zip` and `tar` tools is an approval decision; supporting multiple archive backends in 0.1 is not recommended.
+The approved archive tool is `bsdtar` because one executable can produce both ZIP and compressed tar archives. If Fedora packaging or capability testing makes this impractical, replacing it with separate `zip` and `tar` tools requires a new approval decision; supporting multiple archive backends in 0.1 is not planned.
 
 FFmpeg builds vary. UtilityForge must probe for the specific encoders used by the standard re-encode preset instead of assuming that every `ffmpeg` binary includes them.
 

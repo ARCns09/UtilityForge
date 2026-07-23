@@ -13,6 +13,8 @@
 
 Deliver the seven planning documents, reconcile their scope, and obtain approval for architecture, version 0.1 boundaries, dependency choices, and minimum versions.
 
+Status: the architecture and listed technical decisions are approved, and documentation alignment is complete. Final implementation approval remains pending.
+
 Exit gate:
 
 - product and DropZone acceptance criteria are approved;
@@ -65,9 +67,9 @@ Implement probed `bsdtar`, FFprobe, and FFmpeg workflows through the shared asyn
 Exit gate:
 
 - ZIP and TAR.GZ creation passes the documented file/folder/symlink contract;
-- compatible MKV fixtures remux without re-encoding;
+- compatible MKV fixtures, including fixtures with multiple AAC/MP3 audio streams, remux without re-encoding;
 - incompatible codecs offer re-encoding only after preflight and explicit confirmation;
-- unsupported stream layouts explain why they are rejected;
+- subtitles, attachments, data, and incompatible audio streams are enumerated before confirmed exclusion, while inputs without exactly one video stream are rejected;
 - termination/kill, partial-output cleanup, and output validation tests pass.
 
 ## Phase 5 — Version 0.1 hardening and Fedora KDE release

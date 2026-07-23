@@ -54,7 +54,7 @@ Archive member names are display-escaped in logs. Newlines and control character
 
 ## Media safety
 
-FFprobe and FFmpeg receive only selected local inputs and staged outputs. Probe output has byte and time limits. Remux/re-encode commands use application-owned presets; stream selection is based on validated JSON, not stderr scraping. Version 0.1 rejects unsupported data streams, attachments, subtitles, and extra audio/video streams rather than dropping them.
+FFprobe and FFmpeg receive only selected local inputs and staged outputs. Probe output has byte and time limits. Remux/re-encode commands use application-owned presets; stream selection is based on validated JSON, not stderr scraping. Version 0.1 requires exactly one video stream, maps every compatible audio stream, and excludes subtitles, attachments, data, and incompatible audio only after showing an exact preflight summary and receiving confirmation. An input with zero or multiple video streams is rejected; its video streams are never silently discarded.
 
 FFmpeg is a high-risk parser of untrusted media, so distributions should provide security updates. UtilityForge reports the resolved binary and version in diagnostics and does not bundle an unmaintained copy by default.
 

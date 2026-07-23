@@ -62,7 +62,7 @@ Archive symlinks are stored as links, not followed. Device nodes, sockets, and o
 
 Qt image support is plugin-dependent. Version 0.1 targets still PNG/JPEG/WebP images only. Animated images are not preserved as animation. Re-encoding can discard source metadata, color profiles, or exact chroma characteristics; the UI warns that conversion preserves rendered pixels and orientation rather than all metadata.
 
-The 0.1 video contract intentionally accepts a narrow MKV stream layout documented in `DROPZONE_MVP.md`. It is not a general media editor. MP4 compatibility also varies among playback devices even when FFmpeg can produce the container.
+The 0.1 video contract intentionally requires exactly one video stream, includes multiple MP4-compatible audio streams, and excludes other stream types only with confirmation, as documented in `DROPZONE_MVP.md`. It is not a general media editor. MP4 compatibility also varies among playback devices even when FFmpeg can produce the container.
 
 ## Packaging and desktop registration
 
