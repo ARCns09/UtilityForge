@@ -1,0 +1,11 @@
+/build/
+/build-*/
+/.cache/
+/.clangd/
+/.idea/
+/.vscode/
+CMakeUserPresets.json
+compile_commands.json
+*.user
+*.swp
+*~

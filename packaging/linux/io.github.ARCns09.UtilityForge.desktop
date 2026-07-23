@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=UtilityForge
+Comment=Compact native tools for local files
+Exec=utilityforge
+Icon=applications-utilities
+Terminal=false
+Categories=Utility;FileTools;
+StartupNotify=true

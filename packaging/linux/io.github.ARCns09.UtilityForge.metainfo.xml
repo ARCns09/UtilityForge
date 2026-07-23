@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.ARCns09.UtilityForge</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <name>UtilityForge</name>
+  <summary>Compact native utilities for Linux desktop work</summary>
+  <description>
+    <p>
+      UtilityForge is a native Qt Widgets application for focused local desktop tasks.
+      This early build provides the application shell and DropZone workspace foundation.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.ARCns09.UtilityForge.desktop</launchable>
+  <url type="homepage">https://github.com/ARCns09/UtilityForge</url>
+  <developer id="io.github.arcns09">
+    <name>UtilityForge contributors</name>
+  </developer>
+  <provides>
+    <binary>utilityforge</binary>
+  </provides>
+  <categories>
+    <category>Utility</category>
+  </categories>
+  <icon type="stock">applications-utilities</icon>
+  <content_rating type="oars-1.1" />
+</component>
